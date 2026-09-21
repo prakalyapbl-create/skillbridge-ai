@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillBridge AI — Pitch Deck & Presentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      .slide {
+        page-break-after: always;
+        height: 100vh;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased p-4 sm:p-8">
+
+  <!-- Print PDF Button -->
+  <div className="max-w-5xl mx-auto mb-6 flex justify-between items-center no-print">
+    <a href="index.html" class="text-xs font-bold text-blue-400 hover:underline">← Back to SkillBridge AI App</a>
+    <button onclick="window.print()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow">
+      🖨️ Print / Save as PDF
+    </button>
+  </div>
+
+  <div class="max-w-5xl mx-auto space-y-12">
+
+    <!-- Slide 1: Title -->
+    <div class="slide bg-slate-800 border border-slate-700 rounded-3xl p-8 sm:p-12 shadow-2xl flex flex-col justify-between min-h-[500px]">
+      <div>
+        <div class="inline-block bg-blue-500/20 text-blue-300 border border-blue-400/30 px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase mb-6">
+          AI-Powered Career Readiness Platform
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-black text-white leading-tight">SkillBridge AI</h1>
+        <p class="text-xl sm:text-2xl text-blue-300 font-semibold mt-3">"From Skill Gaps to Career Opportunities"</p>
+        <p class="text-sm text-slate-400 mt-4 max-w-2xl">
+          Empowering college students with AI resume analysis, skill gap mapping, multilingual learning in Tamil, English & Hindi, practical projects, and verified opportunity matching.
+        </p>
+      </div>
+      <div class="border-t border-slate-700 pt-6 flex flex-wrap justify-between text-xs text-slate-400 font-medium">
+        <span>🌐 Live App: https://prakalyapbl-create.github.io/skillbridge-ai/</span>
+        <span>Target: College Students & Fresh Graduates</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: Problem Statement -->
+    <div class="slide bg-slate-800 border border-slate-700 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-6">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-amber-400">01. The Problem Statement</h2>
+      <p class="text-sm text-slate-300 leading-relaxed">
+        College students face severe confusion when transitioning from academics to technical careers:
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="p-5 bg-slate-900/80 rounded-2xl border border-slate-700 space-y-2">
+          <div class="font-extrabold text-red-400 text-sm">❌ Skill Ambiguity</div>
+          <p class="text-slate-400">78%+ of students do not know what technical skills they are missing for specific roles like Software Developer Intern.</p>
+        </div>
+        <div class="p-5 bg-slate-900/80 rounded-2xl border border-slate-700 space-y-2">
+          <div class="font-extrabold text-amber-400 text-sm">❌ Resource Disconnection</div>
+          <p class="text-slate-400">Students get trapped in unguided YouTube tutorials without structured weekly roadmaps or trusted source verification.</p>
+        </div>
+        <div class="p-5 bg-slate-900/80 rounded-2xl border border-slate-700 space-y-2">
+          <div class="font-extrabold text-purple-400 text-sm">❌ Regional Language Barrier</div>
+          <p class="text-slate-400">Students comfortable in Tamil or Hindi lack structured guidance explaining complex tech concepts in their native language.</p>
+        </div>
+        <div class="p-5 bg-slate-900/80 rounded-2xl border border-slate-700 space-y-2">
+          <div class="font-extrabold text-sky-400 text-sm">❌ Keyword Stuffing & Fake Resumes</div>
+          <p class="text-slate-400">Students resort to fake online resume generators, leading to immediate rejection during technical interviews.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Solution Loop -->
+    <div class="slide bg-slate-800 border border-slate-700 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-6">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-400">02. The SkillBridge AI Solution</h2>
+      <p class="text-sm text-slate-300">
+        SkillBridge AI creates a continuous 7-step career development cycle:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+          <span class="font-extrabold text-blue-400 text-sm block">1. Profile & Resume</span>
+          <span class="text-slate-400">AI skill extraction without qualification fabrication.</span>
+        </div>
+        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+          <span class="font-extrabold text-emerald-400 text-sm block">2. Skill Gap Mapping</span>
+          <span class="text-slate-400">GREEN / YELLOW / RED status categorizations.</span>
+        </div>
+        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+          <span class="font-extrabold text-indigo-400 text-sm block">3. Multilingual Learn</span>
+          <span class="text-slate-400">Trusted resources in Tamil, English, and Hindi.</span>
+        </div>
+        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+          <span class="font-extrabold text-purple-400 text-sm block">4. Practical Projects</span>
+          <span class="text-slate-400">Portfolio builds with resume bullet guidance.</span>
+        </div>
+        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+          <span class="font-extrabold text-sky-400 text-sm block">5. Dual Resume Studio</span>
+          <span class="text-slate-400">Mode A Builder + Mode B Resume Tutor AI.</span>
+        </div>
+        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+          <span class="font-extrabold text-amber-400 text-sm block">6. Opportunity Match</span>
+          <span class="text-slate-400">Devpost, Unstop & Official Company listings.</span>
+        </div>
+        <div class="p-4 bg-slate-900 rounded-xl border border-slate-700">
+          <span class="font-extrabold text-pink-400 text-sm block">7. SkillBreak Games</span>
+          <span class="text-slate-400">3-Minute educational code puzzles & quizzes.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Tech Stack -->
+    <div class="slide bg-slate-800 border border-slate-700 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-6">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-sky-400">03. Full-Stack Architecture</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <div class="space-y-3">
+          <div class="font-extrabold text-sm text-slate-200">Frontend & State Layer</div>
+          <ul class="space-y-2 text-slate-400">
+            <li class="bg-slate-900 p-3 rounded-xl border border-slate-700">⚡ <strong>Next.js 14 App Router</strong>: React full-stack framework with Static Export capability.</li>
+            <li class="bg-slate-900 p-3 rounded-xl border border-slate-700">🎨 <strong>Tailwind CSS & Lucide</strong>: Modern student-friendly UI components.</li>
+            <li class="bg-slate-900 p-3 rounded-xl border border-slate-700">📊 <strong>Recharts & Canvas Confetti</strong>: Visual career timelines & reward animations.</li>
+          </ul>
+        </div>
+        <div class="space-y-3">
+          <div class="font-extrabold text-sm text-slate-200">Backend & Deployment</div>
+          <ul class="space-y-2 text-slate-400">
+            <li class="bg-slate-900 p-3 rounded-xl border border-slate-700">🐍 <strong>Python FastAPI Microservice</strong>: Standalone API server in `backend/main.py`.</li>
+            <li class="bg-slate-900 p-3 rounded-xl border border-slate-700">🤖 <strong>AI Reasoning Engine</strong>: Contextual support for Tamil (`ta`), Hindi (`hi`), English (`en`).</li>
+            <li class="bg-slate-900 p-3 rounded-xl border border-slate-700">🚀 <strong>GitHub Actions CI/CD</strong>: Automated static build & deployment to GitHub Pages.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Conclusion -->
+    <div class="slide bg-slate-800 border border-slate-700 rounded-3xl p-8 sm:p-12 shadow-2xl text-center space-y-6">
+      <h2 class="text-3xl font-extrabold text-white">Ready to Empower Student Careers</h2>
+      <p class="text-sm text-slate-300 max-w-xl mx-auto">
+        "We don't just show students jobs. We help them understand requirements, learn missing skills, build real projects, and present their authentic capabilities."
+      </p>
+      <div class="pt-4 flex justify-center space-x-4 text-xs font-bold">
+        <a href="https://prakalyapbl-create.github.io/skillbridge-ai/" target="_blank" class="px-6 py-3 bg-blue-600 text-white rounded-xl shadow">Open Live App</a>
+        <a href="https://github.com/prakalyapbl-create/skillbridge-ai" target="_blank" class="px-6 py-3 bg-slate-700 text-white rounded-xl border border-slate-600">GitHub Repository</a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
