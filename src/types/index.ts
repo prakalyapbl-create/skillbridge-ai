@@ -1,4 +1,5 @@
 export type Language = 'en' | 'ta' | 'hi';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 export type SkillProficiencyLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
@@ -21,7 +22,17 @@ export interface StudentCertification {
   year: string;
 }
 
-export interface StudentProfile {
+export interface NotificationPreferences {
+  emailAlerts: boolean;
+  skillReminders: boolean;
+  deadlineAlerts: boolean;
+  opportunityAlerts: boolean;
+  weeklyProgress: boolean;
+}
+
+export interface UserProfile {
+  id: string;
+  email: string;
   name: string;
   degree: string;
   branch: string;
@@ -37,9 +48,21 @@ export interface StudentProfile {
   preferredLocation: string;
   preferredOpportunityType: 'Internship' | 'Full-time' | 'Both';
   preferredLanguage: Language;
+  learningPreference: 'Video' | 'Reading' | 'Practice' | 'Projects';
   resumeFileName?: string;
   resumeTextContent?: string;
   resumeParsedData?: ExtractedResumeData;
+  notificationPreferences: NotificationPreferences;
+  onboardingCompleted: boolean;
+}
+
+// Alias for backward compatibility across components
+export type StudentProfile = UserProfile;
+
+export interface UserAuthSession {
+  user: UserProfile | null;
+  token: string | null;
+  isAuthenticated: boolean;
 }
 
 export interface ExtractedResumeData {
@@ -69,6 +92,10 @@ export interface SkillGapItem {
   whyItMatters: string;
   recommendedPath: string;
   suggestedProject: string;
+  currentLevel?: SkillProficiencyLevel | 'None';
+  requiredLevel?: SkillProficiencyLevel;
+  learningAction?: string;
+  practiceAction?: string;
 }
 
 export type ResourceTrustBadge = 
@@ -88,6 +115,7 @@ export interface LearningResource {
   sourceType: string;
   verificationBadge: ResourceTrustBadge;
   link: string;
+  format?: 'Video' | 'Course' | 'Documentation' | 'Practice' | 'Project';
 }
 
 export type RoadmapStatus = 'Not Started' | 'Learning' | 'Practicing' | 'Completed';
@@ -119,6 +147,8 @@ export interface Opportunity {
   officialLink: string;
   lastVerifiedDate: string;
   stipendOrSalary?: string;
+  isRemote?: boolean;
+  experienceLevel?: string;
 }
 
 export interface OpportunityMatchResult {
@@ -126,7 +156,7 @@ export interface OpportunityMatchResult {
   skillsToImprove: string[];
   missingSkills: string[];
   eligibilityCheck: boolean;
-  resumeRelevanceScore: number; // 0 - 100%
+  resumeRelevanceScore: number;
   recommendationMessage: string;
 }
 
@@ -160,7 +190,7 @@ export interface ChatMessage {
 
 export interface QuizQuestion {
   id: string;
-  type: 'bug_hunter' | 'code_output' | 'communication' | 'technical_quiz';
+  type: 'bug_hunter' | 'code_output' | 'communication' | 'technical_quiz' | 'logic';
   title: string;
   prompt: string;
   codeSnippet?: string;
@@ -174,8 +204,21 @@ export interface AppNotification {
   title: string;
   message: string;
   timestamp: string;
-  type: 'job_match' | 'deadline' | 'skill_unlocked' | 'resume_alert';
+  type: 'job_match' | 'deadline' | 'skill_unlocked' | 'resume_alert' | 'learning_reminder';
   read: boolean;
   actionSkill?: string;
   actionOpportunityId?: string;
+}
+
+export interface CategoryCardItem {
+  id: string;
+  titleKey: string;
+  descriptionKey: string;
+  shortDescKey: string;
+  image: string;
+  route: string;
+  icon: string;
+  countLabelKey?: string;
+  badge?: 'New' | 'Trending' | 'Recommended' | 'For You';
+  skillsExample: string[];
 }

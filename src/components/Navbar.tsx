@@ -1,163 +1,255 @@
-import React from 'react';
-import { Language, StudentProfile } from '../types';
-import { translations } from '../data/translations';
-import { Sparkles, Globe, UserCheck, Bell, Briefcase, Award } from 'lucide-react';
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
+import { Language, ThemeMode } from '../types';
+import { Sparkles, Globe, Sun, Moon, Monitor, Bell, LogOut, User as UserIcon, Settings, UserCheck, Menu, X } from 'lucide-react';
 
 interface NavbarProps {
-  currentLanguage: Language;
-  onLanguageChange: (lang: Language) => void;
-  profile: StudentProfile;
-  onLoadDemoProfile: () => void;
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-  unreadCount: number;
-  onOpenNotifications: () => void;
+  onOpenNotifications?: () => void;
+  unreadNotificationsCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  currentLanguage,
-  onLanguageChange,
-  profile,
-  onLoadDemoProfile,
-  activeTab,
-  setActiveTab,
-  unreadCount,
-  onOpenNotifications
+  onOpenNotifications,
+  unreadNotificationsCount = 2
 }) => {
-  const t = translations[currentLanguage];
+  const { session, logout, loadDemoAccount } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
+  const { theme, setTheme, isDark } = useTheme();
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const user = session.user;
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
-          {/* Logo & Brand */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md">
+          {/* Logo & Tagline */}
+          <Link href="/dashboard" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
               <Sparkles className="w-6 h-6 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-xl tracking-tight text-slate-900">{t.appName}</span>
-                <span className="text-[10px] font-semibold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full uppercase tracking-wide border border-blue-200">
-                  AI Career Engine
+                <span className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">{t('common.appName')}</span>
+                <span className="text-[10px] font-bold bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full uppercase tracking-wide border border-blue-200 dark:border-blue-800">
+                  v2.0 PRO
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-medium hidden sm:block">{t.tagline}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:block">
+                {t('common.tagline')}
+              </p>
             </div>
-          </div>
+          </Link>
 
-          {/* Quick Actions & Language Switcher */}
-          <div className="flex items-center space-x-3">
+          {/* Controls: Language, Theme, Auth, Notifications */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
             
-            {/* Load Demo Student Profile Button */}
+            {/* Quick Demo Profile Load */}
             <button
-              onClick={onLoadDemoProfile}
-              className="hidden md:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold border border-emerald-200 transition-colors shadow-sm"
-              title="Click to quickly populate with Arun Kumar (2nd Year B.E. CS) demo data"
+              onClick={loadDemoAccount}
+              className="hidden lg:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800 transition-colors"
+              title="Click to load Arun Kumar Demo Student Profile"
             >
               <UserCheck className="w-3.5 h-3.5" />
-              <span>{t.loadDemoProfile}</span>
+              <span>{t('common.loadDemoProfile')}</span>
             </button>
 
-            {/* Language Selector */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
+            {/* Language Switcher Dropdown */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
               <Globe className="w-4 h-4 text-slate-500 ml-1.5 mr-1" />
+              {(['en', 'ta', 'hi'] as Language[]).map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`px-2 py-1 text-xs font-bold rounded-lg transition-all ${
+                    language === lang
+                      ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  {lang === 'en' ? 'EN' : lang === 'ta' ? 'தமிழ்' : 'हिंदी'}
+                </button>
+              ))}
+            </div>
+
+            {/* Theme Switcher Toggle */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
               <button
-                onClick={() => onLanguageChange('en')}
-                className={`px-2 py-1 text-xs font-bold rounded-md transition-all ${
-                  currentLanguage === 'en'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
+                onClick={() => setTheme(isDark ? 'light' : 'dark')}
+                className="p-1 rounded-lg text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+                aria-label="Toggle Theme"
               >
-                EN
-              </button>
-              <button
-                onClick={() => onLanguageChange('ta')}
-                className={`px-2 py-1 text-xs font-bold rounded-md transition-all ${
-                  currentLanguage === 'ta'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                தமிழ்
-              </button>
-              <button
-                onClick={() => onLanguageChange('hi')}
-                className={`px-2 py-1 text-xs font-bold rounded-md transition-all ${
-                  currentLanguage === 'hi'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                हिंदी
+                {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
               </button>
             </div>
 
             {/* Notification Bell */}
-            <button
-              onClick={onOpenNotifications}
-              className="relative p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-bounce">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
+            {onOpenNotifications && (
+              <button
+                onClick={onOpenNotifications}
+                className="relative p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                aria-label="Notifications"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadNotificationsCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-bounce">
+                    {unreadNotificationsCount}
+                  </span>
+                )}
+              </button>
+            )}
 
-            {/* Active User Badge */}
-            <div 
-              onClick={() => setActiveTab('profile')} 
-              className="flex items-center space-x-2 pl-2 border-l border-slate-200 cursor-pointer group"
+            {/* User Profile Avatar / Auth */}
+            {session.isAuthenticated && user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="flex items-center space-x-2 p-1 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">
+                    {user.name ? user.name.slice(0, 2).toUpperCase() : 'SK'}
+                  </div>
+                  <div className="hidden lg:block text-left">
+                    <div className="text-xs font-extrabold text-slate-800 dark:text-white leading-tight">
+                      {user.name}
+                    </div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[100px]">
+                      {user.targetRole}
+                    </div>
+                  </div>
+                </button>
+
+                {/* Dropdown Menu */}
+                {userDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl py-2 z-50 text-xs font-semibold">
+                    <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-700">
+                      <div className="font-extrabold text-slate-900 dark:text-white">{user.name}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400">{user.email}</div>
+                    </div>
+                    
+                    <Link
+                      href="/profile"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200"
+                    >
+                      <UserIcon className="w-4 h-4 text-blue-600" />
+                      <span>{t('navigation.profile')}</span>
+                    </Link>
+
+                    <Link
+                      href="/settings"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200"
+                    >
+                      <Settings className="w-4 h-4 text-indigo-600" />
+                      <span>{t('navigation.settings')}</span>
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        logout();
+                      }}
+                      className="w-full text-left flex items-center space-x-2 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 border-t border-slate-100 dark:border-slate-700 mt-1"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>{t('common.logout')}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link
+                  href="/login"
+                  className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700"
+                >
+                  {t('common.login')}
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-3.5 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 shadow-sm"
+                >
+                  {t('common.register')}
+                </Link>
+              </div>
+            )}
+
+            {/* Mobile Hamburger Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              aria-label="Toggle Mobile Menu"
             >
-              <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs border border-slate-300 group-hover:border-blue-500 transition-colors">
-                {profile.name ? profile.name.slice(0, 2).toUpperCase() : 'AK'}
-              </div>
-              <div className="hidden lg:block text-left">
-                <div className="text-xs font-bold text-slate-800 leading-tight group-hover:text-blue-600">
-                  {profile.name || 'Student Profile'}
-                </div>
-                <div className="text-[10px] text-slate-500">
-                  {profile.targetRole || 'Select Role'}
-                </div>
-              </div>
-            </div>
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
 
           </div>
 
         </div>
 
-        {/* Primary Module Navigation Tabs */}
-        <nav className="flex space-x-1 overflow-x-auto pb-2 pt-1 no-scrollbar border-t border-slate-100 text-xs font-semibold">
+        {/* Navigation Tabs Bar */}
+        <nav className="hidden md:flex space-x-1 overflow-x-auto pb-2 pt-1 no-scrollbar border-t border-slate-100 dark:border-slate-800 text-xs font-semibold">
           {[
-            { id: 'dashboard', label: t.navDashboard, icon: Briefcase },
-            { id: 'profile', label: t.navProfile, icon: UserCheck },
-            { id: 'skillgap', label: t.navSkillGap, icon: Award },
-            { id: 'learn', label: t.navLearn, icon: Sparkles },
-            { id: 'projects', label: t.navProjects, icon: Briefcase },
-            { id: 'opportunities', label: t.navOpportunities, icon: Briefcase },
-            { id: 'resume', label: t.navResume, icon: Award },
-            { id: 'careerbot', label: t.navCareerBot, icon: Sparkles },
-            { id: 'skillbreak', label: t.navSkillBreak, icon: Sparkles },
-            { id: 'progress', label: t.navProgress, icon: Award }
+            { id: '/dashboard', label: t('navigation.dashboard') },
+            { id: '/profile', label: t('navigation.profile') },
+            { id: '/skills', label: t('navigation.skills') },
+            { id: '/learning', label: t('navigation.learning') },
+            { id: '/projects', label: t('navigation.projects') },
+            { id: '/opportunities', label: t('navigation.opportunities') },
+            { id: '/resume', label: t('navigation.resume') },
+            { id: '/careerbot', label: t('navigation.careerbot') },
+            { id: '/skillbreak', label: t('navigation.skillbreak') },
+            { id: '/mock-tests', label: t('navigation.mockTests') },
+            { id: '/progress', label: t('navigation.progress') },
+            { id: '/settings', label: t('navigation.settings') }
           ].map(tab => (
-            <button
+            <Link
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`whitespace-nowrap px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-all ${
-                activeTab === tab.id
-                  ? 'bg-blue-600 text-white shadow-sm font-bold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
+              href={tab.id}
+              className="whitespace-nowrap px-3 py-1.5 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
             >
-              <span>{tab.label}</span>
-            </button>
+              {tab.label}
+            </Link>
           ))}
         </nav>
+
+        {/* Mobile Dropdown Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 py-3 space-y-1 text-xs font-bold">
+            {[
+              { id: '/dashboard', label: t('navigation.dashboard') },
+              { id: '/profile', label: t('navigation.profile') },
+              { id: '/skills', label: t('navigation.skills') },
+              { id: '/learning', label: t('navigation.learning') },
+              { id: '/projects', label: t('navigation.projects') },
+              { id: '/opportunities', label: t('navigation.opportunities') },
+              { id: '/resume', label: t('navigation.resume') },
+              { id: '/careerbot', label: t('navigation.careerbot') },
+              { id: '/skillbreak', label: t('navigation.skillbreak') },
+              { id: '/mock-tests', label: t('navigation.mockTests') },
+              { id: '/progress', label: t('navigation.progress') },
+              { id: '/settings', label: t('navigation.settings') }
+            ].map(tab => (
+              <Link
+                key={tab.id}
+                href={tab.id}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                {tab.label}
+              </Link>
+            ))}
+          </div>
+        )}
 
       </div>
     </header>

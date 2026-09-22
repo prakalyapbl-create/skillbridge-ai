@@ -1,246 +1,93 @@
 'use client';
 
-import React, { useState } from 'react';
-import { StudentProfile, Language, SkillGapItem, LearningRoadmapWeek, RoadmapStatus, AppNotification, ExtractedResumeData } from '@/types';
-import { demoStudentProfile } from '@/data/demoStudent';
-import { verifiedOpportunities } from '@/data/opportunities';
-import { calculateSkillGap, generateWeeklyRoadmap, recommendProjectsForGaps } from '@/lib/aiEngine';
+import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
-import { LandingHero } from '@/components/LandingHero';
-import { Dashboard } from '@/components/Dashboard';
-import { ProfileModule } from '@/components/ProfileModule';
-import { ResumeAnalyzer } from '@/components/ResumeAnalyzer';
-import { SkillGapAnalyzer } from '@/components/SkillGapAnalyzer';
-import { LearningNavigator } from '@/components/LearningNavigator';
-import { LearningRoadmap } from '@/components/LearningRoadmap';
-import { ProjectRecommender } from '@/components/ProjectRecommender';
-import { ResumeStudio } from '@/components/ResumeStudio';
-import { OpportunityDiscovery } from '@/components/OpportunityDiscovery';
-import { CareerBot } from '@/components/CareerBot';
-import { SkillBreak } from '@/components/SkillBreak';
-import { NotificationCenter } from '@/components/NotificationCenter';
+import { CategoryGrid } from '@/components/CategoryGrid';
+import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
+import { Sparkles, ArrowRight, ShieldCheck, Target, BookOpen, FileText, Briefcase, Award } from 'lucide-react';
 
 export default function Home() {
-  const [profile, setProfile] = useState<StudentProfile>(demoStudentProfile);
-  const [currentLanguage, setCurrentLanguage] = useState<Language>(demoStudentProfile.preferredLanguage);
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [showLanding, setShowLanding] = useState<boolean>(true);
-
-  // Skill Gap State
-  const [gaps, setGaps] = useState<SkillGapItem[]>(() => calculateSkillGap(demoStudentProfile, demoStudentProfile.targetRole));
-  const [roadmap, setRoadmap] = useState<LearningRoadmapWeek[]>(() => generateWeeklyRoadmap(calculateSkillGap(demoStudentProfile, demoStudentProfile.targetRole)));
-  const [projects, setProjects] = useState(() => recommendProjectsForGaps(calculateSkillGap(demoStudentProfile, demoStudentProfile.targetRole)));
-
-  // Notifications State
-  const [notifications, setNotifications] = useState<AppNotification[]>([
-    {
-      id: 'notif-1',
-      title: 'New Software Engineering Internship Found',
-      message: 'Zoho Corporation has opened Software Development Engineer Intern applications. Your profile matches several requirements. Strengthening SQL & Data Structures will boost your readiness.',
-      timestamp: '10 mins ago',
-      type: 'job_match',
-      read: false
-    },
-    {
-      id: 'notif-2',
-      title: 'Devpost Hackathon Deadline Approaching',
-      message: 'Global AI Challenge on Devpost closes in 15 days. Your Python and REST API profile skills match eligibility.',
-      timestamp: '2 hours ago',
-      type: 'deadline',
-      read: false
-    }
-  ]);
-  const [showNotifications, setShowNotifications] = useState(false);
-
-  // Handlers
-  const handleLanguageChange = (lang: Language) => {
-    setCurrentLanguage(lang);
-    setProfile(prev => ({ ...prev, preferredLanguage: lang }));
-  };
-
-  const handleLoadDemo = () => {
-    setProfile(demoStudentProfile);
-    setCurrentLanguage(demoStudentProfile.preferredLanguage);
-    const newGaps = calculateSkillGap(demoStudentProfile, demoStudentProfile.targetRole);
-    setGaps(newGaps);
-    setRoadmap(generateWeeklyRoadmap(newGaps));
-    setProjects(recommendProjectsForGaps(newGaps));
-    setShowLanding(false);
-    setActiveTab('dashboard');
-  };
-
-  const handleUpdateProfile = (updatedProfile: StudentProfile) => {
-    setProfile(updatedProfile);
-    const newGaps = calculateSkillGap(updatedProfile, updatedProfile.targetRole);
-    setGaps(newGaps);
-    setRoadmap(generateWeeklyRoadmap(newGaps));
-    setProjects(recommendProjectsForGaps(newGaps));
-  };
-
-  const handleSelectRole = (roleName: string) => {
-    const updated = { ...profile, targetRole: roleName };
-    setProfile(updated);
-    const newGaps = calculateSkillGap(updated, roleName);
-    setGaps(newGaps);
-    setRoadmap(generateWeeklyRoadmap(newGaps));
-    setProjects(recommendProjectsForGaps(newGaps));
-  };
-
-  const handleUpdateRoadmapStatus = (weekId: string, newStatus: RoadmapStatus) => {
-    const updated = roadmap.map(w => w.id === weekId ? { ...w, status: newStatus } : w);
-    setRoadmap(updated);
-  };
-
-  const handleMarkNotificationRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-  };
-
-  const handleUpdateParsedResume = (data: ExtractedResumeData) => {
-    setProfile(prev => ({ ...prev, resumeParsedData: data }));
-  };
-
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const { session, loadDemoAccount } = useAuth();
+  const { t } = useLanguage();
+  const router = useRouter();
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
-      
-      {/* Top Navbar */}
-      <Navbar
-        currentLanguage={currentLanguage}
-        onLanguageChange={handleLanguageChange}
-        profile={profile}
-        onLoadDemoProfile={handleLoadDemo}
-        activeTab={activeTab}
-        setActiveTab={(tab) => {
-          setActiveTab(tab);
-          setShowLanding(false);
-        }}
-        unreadCount={unreadCount}
-        onOpenNotifications={() => setShowNotifications(true)}
-      />
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">
+      <Navbar />
 
-      {/* Main Content Body */}
-      <main className="flex-1">
-        
-        {/* Landing Hero Section (shown on initial entry or when toggled) */}
-        {showLanding && (
-          <LandingHero
-            currentLanguage={currentLanguage}
-            onGetStarted={() => {
-              setShowLanding(false);
-              setActiveTab('dashboard');
-            }}
-            onLoadDemo={handleLoadDemo}
-          />
-        )}
-
-        {/* Tab Views */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-indigo-900">
+        <div className="max-w-6xl mx-auto relative z-10 text-center">
           
-          {activeTab === 'dashboard' && (
-            <Dashboard
-              profile={profile}
-              gaps={gaps}
-              roadmap={roadmap}
-              opportunities={verifiedOpportunities}
-              currentLanguage={currentLanguage}
-              onNavigateTab={(tab) => {
-                setActiveTab(tab);
-                setShowLanding(false);
+          <div className="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-400/30 rounded-full px-4 py-1.5 mb-6 backdrop-blur">
+            <Sparkles className="w-4 h-4 text-blue-400 animate-pulse" />
+            <span className="text-xs sm:text-sm font-bold text-blue-300 tracking-wide uppercase">
+              {t('common.tagline')}
+            </span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight mb-6 max-w-4xl mx-auto">
+            "{t('common.landingHeadline')}"
+          </h1>
+
+          <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed mb-8">
+            {t('common.landingSubheading')}
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <Link
+              href={session.isAuthenticated ? "/dashboard" : "/register"}
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-base rounded-2xl shadow-lg hover:shadow-blue-500/25 transition-all flex items-center justify-center space-x-2 group"
+            >
+              <span>{t('common.ctaBuildRoadmap')}</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            <button
+              onClick={() => {
+                loadDemoAccount();
+                router.push('/dashboard');
               }}
-              onLoadDemo={handleLoadDemo}
-            />
-          )}
+              className="w-full sm:w-auto px-6 py-4 bg-slate-800/80 hover:bg-slate-700/80 text-emerald-400 font-bold text-base rounded-2xl border border-emerald-500/30 transition-all flex items-center justify-center space-x-2"
+            >
+              <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <span>{t('common.loadDemoProfile')}</span>
+            </button>
+          </div>
 
-          {activeTab === 'profile' && (
-            <ProfileModule
-              profile={profile}
-              onSaveProfile={handleUpdateProfile}
-              onLoadDemo={handleLoadDemo}
-              onAnalyzeResumeText={(text) => {
-                setActiveTab('resume');
-              }}
-            />
-          )}
-
-          {activeTab === 'skillgap' && (
-            <SkillGapAnalyzer
-              profile={profile}
-              gaps={gaps}
-              onSelectRole={handleSelectRole}
-              onNavigateTab={setActiveTab}
-            />
-          )}
-
-          {activeTab === 'learn' && (
-            <LearningNavigator
-              currentLanguage={currentLanguage}
-              targetRole={profile.targetRole}
-            />
-          )}
-
-          {activeTab === 'progress' && (
-            <LearningRoadmap
-              roadmap={roadmap}
-              onUpdateStatus={handleUpdateRoadmapStatus}
-            />
-          )}
-
-          {activeTab === 'projects' && (
-            <ProjectRecommender
-              projects={projects}
-            />
-          )}
-
-          {activeTab === 'resume' && (
-            <div className="space-y-10">
-              <ResumeAnalyzer
-                parsedData={profile.resumeParsedData}
-                resumeText={profile.resumeTextContent}
-                onUpdateParsedData={handleUpdateParsedResume}
-              />
-              <ResumeStudio
-                profile={profile}
-              />
-            </div>
-          )}
-
-          {activeTab === 'opportunities' && (
-            <OpportunityDiscovery
-              opportunities={verifiedOpportunities}
-              profile={profile}
-            />
-          )}
-
-          {activeTab === 'careerbot' && (
-            <CareerBot
-              profile={profile}
-              currentLanguage={currentLanguage}
-            />
-          )}
-
-          {activeTab === 'skillbreak' && (
-            <SkillBreak />
-          )}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-5xl mx-auto text-left">
+            {[
+              { step: "1. PROFILE", desc: "Skills & resume upload", icon: FileText, color: "text-blue-400" },
+              { step: "2. SKILL GAP", desc: "GREEN / YELLOW / RED", icon: Target, color: "text-amber-400" },
+              { step: "3. TRUSTED LEARN", desc: "Tamil, English, Hindi", icon: BookOpen, color: "text-emerald-400" },
+              { step: "4. PRACTICE", desc: "Portfolio builds", icon: Sparkles, color: "text-purple-400" },
+              { step: "5. MATCH & APPLY", desc: "Verified jobs & hackathons", icon: Briefcase, color: "text-sky-400" }
+            ].map((item, idx) => (
+              <div key={idx} className="bg-slate-800/60 border border-slate-700/60 backdrop-blur rounded-2xl p-3.5">
+                <item.icon className={`w-5 h-5 ${item.color} mb-2`} />
+                <div className="text-[11px] font-bold text-slate-200 uppercase tracking-wider">{item.step}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">{item.desc}</div>
+              </div>
+            ))}
+          </div>
 
         </div>
+      </section>
 
-      </main>
-
-      {/* Opportunity Notification Center Sidebar */}
-      {showNotifications && (
-        <NotificationCenter
-          notifications={notifications}
-          onMarkRead={handleMarkNotificationRead}
-          onClose={() => setShowNotifications(false)}
-          onNavigateTab={setActiveTab}
-        />
-      )}
+      {/* VISUAL CATEGORY DISCOVERY SYSTEM (Unstop UX Inspired) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <CategoryGrid />
+      </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-6 px-4 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="font-bold text-slate-700">SkillBridge AI — From Skill Gaps to Career Opportunities.</div>
+      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-8 px-4 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="font-extrabold text-slate-800 dark:text-slate-200">
+            {t('common.appName')} — {t('common.tagline')}
+          </div>
           <div>Multilingual Support: English | Tamil (தமிழ்) | Hindi (हिंदी)</div>
         </div>
       </footer>

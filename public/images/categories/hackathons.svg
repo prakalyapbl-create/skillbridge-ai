@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <rect width="400" height="240" rx="16" fill="url(#bg_hack)"/>
+  <rect x="110" y="50" width="180" height="130" rx="10" fill="#0f172a" stroke="#818cf8" stroke-width="3"/>
+  <path d="M140 100l-15 15 15 15M170 100l15 15-15 15M200 125l10-30" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="250" cy="115" r="16" fill="#6366f1"/>
+  <path d="M246 115l3 3 5-5" stroke="#ffffff" stroke-width="2.5"/>
+  <defs>
+    <linearGradient id="bg_hack" x1="0" y1="0" x2="400" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#312e81"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+</svg>

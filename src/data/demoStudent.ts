@@ -1,6 +1,8 @@
 import { StudentProfile } from '../types';
 
 export const demoStudentProfile: StudentProfile = {
+  id: "usr-demo-1",
+  email: "arun.kumar@university.edu",
   name: "Arun Kumar",
   degree: "B.E. Computer Science & Engineering",
   branch: "Computer Science",
@@ -40,6 +42,15 @@ export const demoStudentProfile: StudentProfile = {
   preferredLocation: "Chennai / Hybrid",
   preferredOpportunityType: "Internship",
   preferredLanguage: "ta",
+  learningPreference: "Video",
+  notificationPreferences: {
+    emailAlerts: true,
+    skillReminders: true,
+    deadlineAlerts: true,
+    opportunityAlerts: true,
+    weeklyProgress: true
+  },
+  onboardingCompleted: true,
   resumeFileName: "Arun_Kumar_CS_Resume.pdf",
   resumeTextContent: `ARUN KUMAR
 Degree: B.E. Computer Science & Engineering (Year 2) | CGPA: 8.4/10

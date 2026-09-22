@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <rect width="400" height="240" rx="16" fill="url(#bg_learn)"/>
+  <path d="M140 70l60-20 60 20v80l-60 20-60-20z" fill="#ffffff" opacity="0.9"/>
+  <path d="M200 50v100" stroke="#0284c7" stroke-width="3"/>
+  <path d="M150 90h40M150 110h35M210 90h40M210 110h35" stroke="#0369a1" stroke-width="2.5" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="bg_learn" x1="0" y1="0" x2="400" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0c4a6e"/>
+      <stop offset="1" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+</svg>

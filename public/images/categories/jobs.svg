@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" fill="none">
+  <rect width="400" height="240" rx="16" fill="url(#bg_jobs)"/>
+  <rect x="120" y="60" width="160" height="120" rx="12" fill="#ffffff" opacity="0.95"/>
+  <path d="M150 100h100M150 120h80M150 140h60" stroke="#059669" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="260" cy="140" r="14" fill="#10b981"/>
+  <path d="M255 140l3 3 6-6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="bg_jobs" x1="0" y1="0" x2="400" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#064e3b"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+</svg>
